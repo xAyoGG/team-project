@@ -298,6 +298,7 @@ public class MainMenu extends JFrame implements ActionListener {
 				//scrape(word) for definition
 				def.setText("def_scrape");
 			}
+			sb = new StringBuffer();
 			sb.append(word.getText() + ":" + def.getText() + System.getProperty("line.separator"));
 			
 			//...
@@ -324,7 +325,9 @@ public class MainMenu extends JFrame implements ActionListener {
 				}
 				bw = new BufferedWriter(new FileWriter(file));
 				System.out.println("Append new contents:\n" + sb.toString() + " to bufferwriter");
-				bw.append(prevBuffer);
+				if(create == false) {
+					bw.append(prevBuffer); // append prev contents if modifying file
+				}
 				bw.append(sb.toString());
 				System.out.println("bufferWriter written to file");
 				bw.flush();
