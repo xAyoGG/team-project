@@ -16,6 +16,7 @@ public class MainMenu extends JFrame implements ActionListener {
 	private JPanel bottom;							// bottom panel (BOTTOM)
 	private int enteredQuestions;					// -User supplied- number of questions to use
 	private int numQuestions;						// The length of the list or number of actual questions
+	private int currentQuestion = 1;				// Question the user is on 
 	
 	// button panel items 
 	private JPanel buttonPanel;						// Button panel
@@ -147,7 +148,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		lblword.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblword.setBounds(58, 33, 52, 14);
 		wordPanel.add(lblword);
-		
+
 		word = new JTextField();
 		word.setBounds(120, 30, 150, 20);
 		wordPanel.add(word);
@@ -246,7 +247,7 @@ public class MainMenu extends JFrame implements ActionListener {
 		infoPanel.setVisible(false);
 		bottom.add(infoPanel);
 		
-		infoLabel = new JLabel(txtFilePath.getText() + ":: Question: X/Y");
+		infoLabel = new JLabel(":: Question: X/Y");
 		infoPanel.add(infoLabel);
 		
 		// add panels to center panel
@@ -266,6 +267,7 @@ public class MainMenu extends JFrame implements ActionListener {
 			wordPanel.setVisible(false);
 			quizPanel.setVisible(true);
 			filePanel.setVisible(false);
+			infoLabel.setText(path + " :: Question: " + currentQuestion + "/" + enteredQuestions);
 			infoPanel.setVisible(true);
 			//...
 		}
@@ -276,9 +278,10 @@ public class MainMenu extends JFrame implements ActionListener {
 			if(e.getSource() == btnCreateQuiz) {		// Create button boolean
 				create = true;
 			}
+			sb = new StringBuffer();					// instantiate StringBuffer to hold input(s)
 		}
-		if(e.getSource() == btnFilePath) {					// Select File [works]
-			String[] ft = {"txt"};			// String array of acceptable file types
+		if(e.getSource() == btnFilePath) {				// Select File
+			String[] ft = {"txt"};						// String array of acceptable file types
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("text document", ft);
 			fc.setFileFilter(filter);
 			int returnVal = fc.showOpenDialog(this);
@@ -298,7 +301,6 @@ public class MainMenu extends JFrame implements ActionListener {
 				//scrape(word) for definition
 				def.setText("def_scrape");
 			}
-			sb = new StringBuffer();
 			sb.append(word.getText() + ":" + def.getText() + System.getProperty("line.separator"));
 			
 			//...
@@ -326,7 +328,7 @@ public class MainMenu extends JFrame implements ActionListener {
 				bw = new BufferedWriter(new FileWriter(file));
 				System.out.println("Append new contents:\n" + sb.toString() + " to bufferwriter");
 				if(create == false) {
-					bw.append(prevBuffer); // append prev contents if modifying file
+					bw.append(prevBuffer); 	// append prev contents if modifying file
 				}
 				bw.append(sb.toString());
 				System.out.println("bufferWriter written to file");
@@ -359,6 +361,8 @@ public class MainMenu extends JFrame implements ActionListener {
 			rg.clearSelection();
 			btnNext.setEnabled(false);
 			System.out.println("You chose " + s);
+			currentQuestion++;
+			infoLabel.setText(path + " :: Question: " + currentQuestion + "/" + enteredQuestions);
 			//...
 		}
 		if(e.getSource() == txtQuestions) {				// Quiz questions selection 
@@ -368,23 +372,23 @@ public class MainMenu extends JFrame implements ActionListener {
 			}
 			catch(NumberFormatException nfe) {			// disables btnStartQuiz if it can't parse the text to integer
 				btnStartQuiz.setEnabled(false);
+				System.out.println("Enter a number");
 				return;
 			}
 			try {
-				if(file.exists())
+				if(file.exists() && enteredQuestions > 4 )
 					btnStartQuiz.setEnabled(true);
+				/*
+				if(enteredQuestions > numQuestions) {		// disable btnStartQuiz if enteredQuestions > numQuestions
+					btnStartQuiz.setEnabled(false);
+					return;
+				}
+				*/
 			}
 			catch(NullPointerException npe) {
 				return;
 			}
 			return;
-				
-				/*
-			if(enteredQuestions > numQuestions) {		// disable btnStartQuiz if enteredQuestions > numQuestions
-				btnStartQuiz.setEnabled(false);
-				return;
-			}
-			*/
 		}
 		if(e.getSource() == btnDeleteWord) {
 			// delete word from objects list
