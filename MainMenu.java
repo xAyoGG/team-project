@@ -4,7 +4,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
-import java.util.Scanner;
 import java.awt.*;
 
 public class MainMenu extends JFrame implements ActionListener {
@@ -52,6 +51,12 @@ public class MainMenu extends JFrame implements ActionListener {
 	private JRadioButton radio3;
 	private ButtonGroup rg;							// radio button group
 	private JButton btnNext;						// next button
+	
+	// results panel items --
+	private JPanel resultsPanel;						// results panel
+	private JLabel lblResults = new JLabel("Results");
+	private JScrollPane sp;
+	private JTextArea ta;
 	
 	// info panel items --
 	private JPanel infoPanel;						// info panel
@@ -127,14 +132,14 @@ public class MainMenu extends JFrame implements ActionListener {
 		btnModifyQuiz.addActionListener(this);
 		
 		JLabel lblQuestions = new JLabel("Number of Questions:");
-        lblQuestions.setBounds(125, 158, 151, 22);
+		lblQuestions.setToolTipText("Must be greater than 4 and less than the number of quiz terms");
+        lblQuestions.setBounds(125, 158, 133, 22);
         buttonPanel.add(lblQuestions);
 		
 		txtQuestions = new JTextField("");
-		txtQuestions.setBounds(254, 154, 30, 30);
+		txtQuestions.setBounds(260, 154, 30, 30);
 		buttonPanel.add(txtQuestions);
 		txtQuestions.addActionListener(this);
-		
 		
 		// Quiz words create / modify (CENTER)
 	
@@ -194,6 +199,7 @@ public class MainMenu extends JFrame implements ActionListener {
 			// File selection button
 		
 		btnFilePath = new JButton("File path");
+		btnFilePath.setToolTipText("Select a .txt file");
 		filePanel.add(btnFilePath);
 		btnFilePath.addActionListener(this);
 		
@@ -250,16 +256,36 @@ public class MainMenu extends JFrame implements ActionListener {
 		infoLabel = new JLabel(":: Question: X/Y");
 		infoPanel.add(infoLabel);
 		
-		// add panels to center panel
+		// Results panel (CENTER)
 		
-		center.add(buttonPanel);
-		center.add(wordPanel);
-        center.add(quizPanel);
-        
-        
+		resultsPanel = new JPanel();
+		center.add(resultsPanel);					
+		lblResults.setHorizontalAlignment(SwingConstants.CENTER);
+        lblResults.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        lblResults.setBounds(184, 0, 74, 25);
+        resultsPanel.add(lblResults);				// adds label that says "results"
+		ta = new JTextArea();						// make text area
+		ta.setLineWrap(true);
+		sp = new JScrollPane(ta);					// add text area to scroll pane
+		sp.setBounds(10, 25, 422, 153);
+		sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		resultsPanel.setLayout(null);
+		resultsPanel.add(sp);						// add scroll pane to results panel
+		
+		//************		This section will set the quiz results output
+		StringBuilder s = new StringBuilder();
+		for(int i = 0; i < 10; i++) {
+			s.append("filler text");
+			s.append(System.getProperty("line.separator"));
+		}
+		s.append("there is no horizontal scroll bar because this text area is set to wrap long lines of text.");
+		ta.setText(s.toString());
+        //*************
+		
+		ta.setCaretPosition(0);						// sets cursor back to beginning of the text area so that user will scroll down
 	}
 	
-	// Action for File path button
+	// Action handlers for everything
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnStartQuiz) {					// Start Quiz
@@ -269,7 +295,12 @@ public class MainMenu extends JFrame implements ActionListener {
 			filePanel.setVisible(false);
 			infoLabel.setText(path + " :: Question: " + currentQuestion + "/" + enteredQuestions);
 			infoPanel.setVisible(true);
-			//...
+
+			//**********
+			// pull first quiz question here
+			//*********
+			
+			infoLabel.setText(path + " :: Question: " + currentQuestion + "/" + enteredQuestions);
 		}
 		if(e.getSource() == btnCreateQuiz || e.getSource() == btnModifyQuiz) {
 			buttonPanel.setVisible(false);
@@ -298,12 +329,16 @@ public class MainMenu extends JFrame implements ActionListener {
 			System.out.println("Add word " + word.getText() + ", definition " + def.getText());
 			if(def.getText().equals("")) {
 				System.out.println("definition scrape request");
-				//scrape(word) for definition
+				//**********
+				// scrape definition here
+				//*********
 				def.setText("def_scrape");
 			}
 			sb.append(word.getText() + ":" + def.getText() + System.getProperty("line.separator"));
 			
-			//...
+			//**********
+			// add word here
+			//*********
 		}
 		if(e.getSource() == btnReturn) {					// Return to main menu and add write buffer to file
 			try {
@@ -361,9 +396,17 @@ public class MainMenu extends JFrame implements ActionListener {
 			rg.clearSelection();
 			btnNext.setEnabled(false);
 			System.out.println("You chose " + s);
+			if(currentQuestion == enteredQuestions) {		// handles end of quiz
+				quizPanel.setVisible(false);
+				resultsPanel.setVisible(true);
+			}
 			currentQuestion++;
+			
+			//**********
+			// pull next quiz question here
+			//*********
+			
 			infoLabel.setText(path + " :: Question: " + currentQuestion + "/" + enteredQuestions);
-			//...
 		}
 		if(e.getSource() == txtQuestions) {				// Quiz questions selection 
 			String s = txtQuestions.getText();
@@ -390,14 +433,15 @@ public class MainMenu extends JFrame implements ActionListener {
 			}
 			return;
 		}
-		if(e.getSource() == btnDeleteWord) {
-			// delete word from objects list
-			// delete word from text file
+		if(e.getSource() == btnDeleteWord) {		// delete word 
+			//**********
+			// delete a word here
+			//*********
 			System.out.println("delete " + word.getText());
 		}
 	}
 	
-	static String convertStreamToString(InputStream is) {
+	static String convertStreamToString(InputStream is) {		// snippet of code for file reading
 	    @SuppressWarnings("resource")
 		java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
 	    return s.hasNext() ? s.next() : "";
