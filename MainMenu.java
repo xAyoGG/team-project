@@ -463,7 +463,7 @@ public class QuizFile{
 		return true;
 	}
 	// looks a word up and returns the definition as a string
-	public String WordLookUp(String Word){
+	public String WordLookUp(String word){
 		return " ";
 	}
 	// returns the ArrayList of Questions
