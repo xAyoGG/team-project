@@ -42,6 +42,11 @@ public class MainMenu extends JFrame implements ActionListener {
 	private JFileChooser fc = new JFileChooser();	// File chooser object
 	private JTextField txtFilePath;					// file path of quiz
 	
+	// end panel items
+	private JPanel endPanel;						// End of quiz panel
+	private JButton btnReturnToMenu;				// Return to menu
+	private JButton btnExit;						// Exit Application
+	
 	// quiz panel items --
 	private JPanel quizPanel;						// quiz interface panel
 	private JLabel lblQuestion;
@@ -256,14 +261,25 @@ public class MainMenu extends JFrame implements ActionListener {
 		infoLabel = new JLabel(":: Question: X/Y");
 		infoPanel.add(infoLabel);
 		
+		// End of quiz panel (BOTTOM)
+		
+		endPanel = new JPanel();
+		bottom.add(endPanel);
+		btnReturnToMenu = new JButton("Return to Menu");
+		endPanel.add(btnReturnToMenu);
+		btnReturnToMenu.addActionListener(this);
+		btnExit = new JButton("Exit");
+		btnExit.addActionListener(this);
+		endPanel.add(btnExit);
+		
 		// Results panel (CENTER)
 		
 		resultsPanel = new JPanel();
 		center.add(resultsPanel);					
 		lblResults.setHorizontalAlignment(SwingConstants.CENTER);
-        lblResults.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        lblResults.setFont(new Font("Tahoma", Font.PLAIN, 17));
         lblResults.setBounds(184, 0, 74, 25);
-        resultsPanel.add(lblResults);				// adds label that says "results"
+        resultsPanel.add(lblResults);				// title label that says "Results"
 		ta = new JTextArea();						// make text area
 		ta.setLineWrap(true);
 		sp = new JScrollPane(ta);					// add text area to scroll pane
@@ -300,6 +316,7 @@ public class MainMenu extends JFrame implements ActionListener {
 			// pull first quiz question here
 			//*********
 			
+			currentQuestion = 1;
 			infoLabel.setText(path + " :: Question: " + currentQuestion + "/" + enteredQuestions);
 		}
 		if(e.getSource() == btnCreateQuiz || e.getSource() == btnModifyQuiz) {
@@ -397,8 +414,10 @@ public class MainMenu extends JFrame implements ActionListener {
 			btnNext.setEnabled(false);
 			System.out.println("You chose " + s);
 			if(currentQuestion == enteredQuestions) {		// handles end of quiz
-				quizPanel.setVisible(false);
-				resultsPanel.setVisible(true);
+				quizPanel.setVisible(false);				// hides quiz interface (CENTER)
+				resultsPanel.setVisible(true);				// presents results text area in scroll panel
+				infoPanel.setVisible(false);				// hides info panel (SOUTH) 
+				endPanel.setVisible(true);					// presents 
 			}
 			currentQuestion++;
 			
@@ -438,6 +457,22 @@ public class MainMenu extends JFrame implements ActionListener {
 			// delete a word here
 			//*********
 			System.out.println("delete " + word.getText());
+		}
+		if(e.getSource() == btnExit) {				// Exit button
+			int confirm = JOptionPane.showOptionDialog(this,
+                    "Are You Sure to Close this Application?",
+                    "Exit Confirmation", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, null, null);
+            if (confirm == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }							// Terminate Application
+		}
+		if(e.getSource() == btnReturnToMenu) {		// Return to menu
+			resultsPanel.setVisible(false);			// hide results panel
+			buttonPanel.setVisible(true);			// present button panel (CENTER)
+			endPanel.setVisible(false);				// hide end panel
+			filePanel.setVisible(true);				// present file panel (BOTTOM)
+			
 		}
 	}
 	
