@@ -1,21 +1,24 @@
-import java.util.*; 
+import java.io.File;
+import java.util.*;
 
 // the Word class
-public class Word extends String{
+class Word {
+	String word;
 	
 	public Word(String w){
-		super(w);
+		word = w;
 	}
+	
 	public boolean equals(Word w2){
 		return word.equals(w2.word);
 	}
 }
-//the Question class
 
-public class Question {
-	private int TimesMissed;	//how manytimes the question was missed
-	private Word key;	// holds the word
-	private String Definition;	//holds the definition
+//the Question class
+class Question {
+	private int TimesMissed;		//how manytimes the question was missed
+	private Word key;				// holds the word
+	private String Definition;		//holds the definition
 	
 	// Accepts a String with format "Word:Definition" and creates a Question Object
 	public Question(String s){
@@ -28,12 +31,13 @@ public class Question {
 		return key.equals(Q2.key);
 	}	
 }
+
 // Quiz class
-public class QuizFile{
+class QuizFile {
 	private File f;
 	private ArrayList<Question> quiz; // holds all the word:definitions in the file
 	// creates a QuizFile
-	public QuizFile(Sting fileName){
+	public QuizFile(String fileName){
 		// checks to see if such a file exists 
 		// if there is already an existing file with this name then it will use it
 		// if not then it creates an empty file
