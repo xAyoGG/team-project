@@ -1,0 +1,32 @@
+import java.util.*;
+
+public class quiz_Logic { //need more information on what outputs I am given
+	ArrayList<Question> quiz; //assumption is I will be given an arrayList of Questions or some arrayList
+	
+	public quiz_Logic(ArrayList<Question> quiz) {
+		super();
+		this.quiz = quiz;
+	}
+	
+	public ArrayList<Question> getQuiz() {
+		return quiz;
+	}
+	
+	public void randomnizeQuestion(Question newQ){
+		//randomnizes the answers in the question so it will print it but does not change the correct answer
+	}
+	public void setQuiz(ArrayList<Question> quiz) {
+		this.quiz = quiz;
+	}
+	public String printQuestion(int index){
+		return null; //returns the question of the desired index/quetion
+	}
+	public String displayResults(){
+		return null;//returns a list of string of the results and the question 
+	}
+	public int results(){
+		return 0; //will go through the arraylist of questions and find out how many of them they got right and will return
+		//the number of questions they got right as an int
+	}
+	
+}
