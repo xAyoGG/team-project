@@ -1,4 +1,4 @@
-class String Scrape {
+class Scrape {
 
 
 	public String webScrape(String input)
